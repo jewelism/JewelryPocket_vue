@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>{{ title }}</h1>
+    <h1>개발자 소개</h1>
+    <h4>정보석</h4>
+    <h5>boseokjung@gmail.com</h5>
   </div>
 </template>
 
@@ -9,7 +11,7 @@ export default {
   name: 'Intro',
   data () {
     return {
-      title: '개발자 페이지'
+      
     }
   }
 }

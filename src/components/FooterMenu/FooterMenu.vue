@@ -11,7 +11,7 @@
 <script>
 export default {
   name: 'FooterMenu',
-  props: ['onPress'],
+  props: ['currentMenu','onPress'],
   data () {
     return {
       

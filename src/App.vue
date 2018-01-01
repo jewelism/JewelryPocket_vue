@@ -6,9 +6,8 @@
     <Convert v-else-if="currentMenu=='convert'"/>
     <Intro v-else-if="currentMenu=='dev'"/>
     <Price v-else="currentMenu=='price'"/>
-
-    <h1>Current Menu : {{currentMenu}}</h1>
-    <FooterMenu :onPress="onPressMenuItem" id="footer"/>
+    
+    <FooterMenu :currentMenu="currentMenu" :onPress="onPressMenuItem" id="footer"/>
   </div>
 </template>
 
@@ -29,8 +28,7 @@ export default {
   },
   methods: {
     onPressMenuItem : function(menu){
-      console.log(menu)
-      this.currentMenu=menu
+      this.currentMenu = menu
     }
   },
   components: {
