@@ -2,7 +2,7 @@
 <template>
   <div>
     <h1>거래소 바로가기</h1>
-    <h6 v-for="site in siteList"><a :href="site.link">{{site.name}}</a></h6>
+    <h4 v-for="site in siteList"><a :href="site.link">{{site.name}}</a></h4>
   </div>
 </template>
 

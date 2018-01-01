@@ -10,7 +10,7 @@
       </option>
     </select>
     <button @click="convert(inputVal)">모의환전</button>
-    <h5>{{result}}원</h5>
+    <h5>{{result}} 원</h5>
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
       ],
       currentType: -1,
       inputVal: '',
-      krCoinValues: [0,0,0,0,0,0],
+      krCoinValues: [],
       result: 0,
       loading: false,
     }
@@ -43,9 +43,12 @@ export default {
       } else if (this.currentType == -1) {
         alert("코인종류를 선택하세요!")
         return false
+      } else if (this.loading) {
+        alert("초기데이터를 로딩중입니다.\n잠시만 기다려주세요")
+        return false
       }
       var result = parseFloat(this.krCoinValues[this.currentType]) * parseFloat(this.inputVal)
-      this.result = result.toFixed(0).toString()
+      this.result = result.toFixed(2).toString()
     }
   },
   mounted : function () {
@@ -53,17 +56,16 @@ export default {
     fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH&tsyms=BTC,KRW,BTC,USD")
       .then((response) => response.json())
       .then((responseJson) => {
-        var arr = []
-        arr.push(responseJson.RAW.BTC.KRW.PRICE)
-        arr.push(responseJson.RAW.ETH.KRW.PRICE)
-        arr.push(responseJson.RAW.ETC.KRW.PRICE)
-        arr.push(responseJson.RAW.XRP.KRW.PRICE)
-        arr.push(responseJson.RAW.LTC.KRW.PRICE)
-        arr.push(responseJson.RAW.DASH.KRW.PRICE)
-        this.krCoinValues = arr
-        console.log(this.krCoinValues)
+        this.krCoinValues.push(responseJson.RAW.BTC.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.ETH.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.ETC.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.XRP.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.LTC.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.DASH.KRW.PRICE)
+        // console.log(this.krCoinValues)
       })
       .catch((error) => {
+        this.result = 'API 에러로 데이터를 가져올 수 없습니다'
         console.error(error);
       })
       .then(()=>{
