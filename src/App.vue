@@ -4,7 +4,9 @@
     <Wallet v-if="currentMenu=='wallet'"/>
     <Invest v-else-if="currentMenu=='invest'"/>
     <Convert v-else-if="currentMenu=='convert'"/>
-    <Intro v-else-if="currentMenu=='dev'"/>
+    <More v-else-if="currentMenu=='more'" :onPress="onPressMenuItem"/>
+    <Intro v-else-if="currentMenu=='intro'"/>
+    <Exchange v-else-if="currentMenu=='exchange'"/>
     <Price v-else="currentMenu=='price'"/>
     
     <FooterMenu :currentMenu="currentMenu" :onPress="onPressMenuItem" id="footer"/>
@@ -17,6 +19,8 @@ import Wallet from './components/Wallet/Wallet'
 import Invest from './components/Invest/Invest'
 import Convert from './components/Convert/Convert'
 import Intro from './components/Intro/Intro'
+import More from './components/More/More'
+import Exchange from './components/More/Exchange'
 import FooterMenu from './components/FooterMenu/FooterMenu'
 
 export default {
@@ -37,6 +41,8 @@ export default {
     Invest,
     Convert,
     Intro,
+    More,
+    Exchange,
     FooterMenu
   }
 }

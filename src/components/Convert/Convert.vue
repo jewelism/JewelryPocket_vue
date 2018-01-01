@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 v-if="loading==true">로딩중...</h2>
     <h1>{{ title }}</h1>
     <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
     <select v-model="currentType">
@@ -37,35 +38,38 @@ export default {
   methods: {
     convert : function () {
       if (this.inputVal == "") {
-        alert("값을 입력하세요!");
-        return false;
-      } else if(this.currentType==-1){
-        alert("코인종류를 선택하세요!");
-        return false;
+        alert("값을 입력하세요!")
+        return false
+      } else if (this.currentType == -1) {
+        alert("코인종류를 선택하세요!")
+        return false
       }
-      
-      var result = parseFloat(this.krCoinValues[this.currentType]) * parseFloat(this.inputVal);
+      var result = parseFloat(this.krCoinValues[this.currentType]) * parseFloat(this.inputVal)
       this.result = result.toFixed(0).toString()
     }
   },
   mounted : function () {
-      fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH&tsyms=BTC,KRW,BTC,USD")
-        .then((response) => response.json())
-        .then((responseJson) => {
-          var arr = [];
-          arr.push(responseJson.RAW.BTC.KRW.PRICE);
-          arr.push(responseJson.RAW.ETH.KRW.PRICE);
-          arr.push(responseJson.RAW.ETC.KRW.PRICE);
-          arr.push(responseJson.RAW.XRP.KRW.PRICE);
-          arr.push(responseJson.RAW.LTC.KRW.PRICE);
-          arr.push(responseJson.RAW.DASH.KRW.PRICE);
-          this.krCoinValues = arr
-          console.log(this.krCoinValues)
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
+    this.loading = true
+    fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH&tsyms=BTC,KRW,BTC,USD")
+      .then((response) => response.json())
+      .then((responseJson) => {
+        var arr = []
+        arr.push(responseJson.RAW.BTC.KRW.PRICE)
+        arr.push(responseJson.RAW.ETH.KRW.PRICE)
+        arr.push(responseJson.RAW.ETC.KRW.PRICE)
+        arr.push(responseJson.RAW.XRP.KRW.PRICE)
+        arr.push(responseJson.RAW.LTC.KRW.PRICE)
+        arr.push(responseJson.RAW.DASH.KRW.PRICE)
+        this.krCoinValues = arr
+        console.log(this.krCoinValues)
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .then(()=>{
+        this.loading = false
+      })
+  },
 }
 </script>
 

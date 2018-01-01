@@ -1,10 +1,6 @@
 <template>
   <div>
-    <button @click="onPress('price')">시세정보</button>
-    <button @click="onPress('wallet')">지갑</button>
-    <button @click="onPress('invest')">가상투자</button>
-    <button @click="onPress('convert')">모의환전</button>
-    <button @click="onPress('dev')">개발자</button>
+    <button v-for="item in itemList" @click="onPress(item.uri)">{{ item.title }}</button>
   </div>
 </template>
 
@@ -14,16 +10,18 @@ export default {
   props: ['currentMenu','onPress'],
   data () {
     return {
-      
+      itemList: [
+        { title: '시세정보', uri: 'price' },
+        { title: '내 지갑', uri: 'wallet' },
+        { title: '가상투자', uri: 'invest' },
+        { title: '모의환전', uri: 'convert' },
+        { title: '더보기', uri: 'more' },
+      ]
     }
   },
-  methods: {
-    
-  }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
 </style>
