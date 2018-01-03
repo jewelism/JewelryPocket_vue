@@ -7,7 +7,7 @@
     <More v-else-if="currentMenu=='more'" :onPress="onPressMenuItem"/>
     <ExchangeLink v-else-if="currentMenu=='exchange'"/>
     <Intro v-else-if="currentMenu=='intro'"/>
-    <Price v-else="currentMenu=='price'"/>
+    <Price v-else="currentMenu=='price'" id="price"/>
     
     <FooterMenu :currentMenu="currentMenu" :onPress="onPressMenuItem" id="footer"/>
   </div>
@@ -56,6 +56,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+},
+#price {
+  margin: auto;
+  width: 90%;
 },
 #footer {
   position:'absolute';

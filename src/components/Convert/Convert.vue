@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 v-if="loading==true">로딩중...</h2>
+    <h2 v-if="loaded==false">로딩중...</h2>
     <h1>{{ title }}</h1>
     <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
     <select v-model="currentType">
@@ -27,12 +27,13 @@ export default {
         { text: 'XRP - 리플', value: 3 },
         { text: 'LTC - 라이트코인', value: 4 },
         { text: 'DASH - 대시', value: 5 },
+        { text: 'BCH - 비트코인캐시', value: 6 },
       ],
       currentType: -1,
       inputVal: '',
       krCoinValues: [],
       result: 0,
-      loading: false,
+      loaded: false,
     }
   },
   methods: {
@@ -43,7 +44,7 @@ export default {
       } else if (this.currentType == -1) {
         alert("코인종류를 선택하세요!")
         return false
-      } else if (this.loading) {
+      } else if (!this.loaded) {
         alert("초기데이터를 로딩중입니다.\n잠시만 기다려주세요")
         return false
       }
@@ -52,8 +53,7 @@ export default {
     }
   },
   mounted : function () {
-    this.loading = true
-    fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH&tsyms=BTC,KRW,BTC,USD")
+    fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH,BCH&tsyms=BTC,KRW,BTC,USD")
       .then((response) => response.json())
       .then((responseJson) => {
         this.krCoinValues.push(responseJson.RAW.BTC.KRW.PRICE)
@@ -62,6 +62,7 @@ export default {
         this.krCoinValues.push(responseJson.RAW.XRP.KRW.PRICE)
         this.krCoinValues.push(responseJson.RAW.LTC.KRW.PRICE)
         this.krCoinValues.push(responseJson.RAW.DASH.KRW.PRICE)
+        this.krCoinValues.push(responseJson.RAW.BCH.KRW.PRICE)
         // console.log(this.krCoinValues)
       })
       .catch((error) => {
@@ -69,7 +70,7 @@ export default {
         console.error(error);
       })
       .then(()=>{
-        this.loading = false
+        this.loaded = true
       })
   },
 }
