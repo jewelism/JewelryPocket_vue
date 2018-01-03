@@ -30,6 +30,10 @@ export default {
       currentMenu: 'price'
     }
   },
+  created () {
+    // localStorage.setItem("boseok","boseok msg!!!!!")
+    //sessionStorage
+  },
   methods: {
     onPressMenuItem : function(menu){
       this.currentMenu = menu

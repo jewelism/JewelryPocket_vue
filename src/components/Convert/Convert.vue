@@ -1,20 +1,26 @@
 <template>
   <div>
-    <h2 v-if="loaded==false">로딩중...</h2>
     <h1>{{ title }}</h1>
-    <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
-    <select v-model="currentType">
-      <option disabled value="-1">코인 종류를 선택하세요</option>
-      <option v-for="option in options" v-bind:value="option.value">
-        {{ option.text }}
-      </option>
-    </select>
-    <button @click="convert(inputVal)">모의환전</button>
-    <h5>{{result}} 원</h5>
+    <div v-if="krCoinValues.length!=0">
+      <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
+      <select v-model="currentType">
+        <option disabled value="-1">코인 종류를 선택하세요</option>
+        <option v-for="option in options" v-bind:value="option.value">
+          {{ option.text }}
+        </option>
+      </select>
+      <button @click="convert(inputVal)">확인</button>
+      <h5>{{result}}</h5>
+    </div>
+    <div v-else-if="loaded">
+      <h5>API 오류로 데이터를 가져올 수 없습니다.</h5>
+    </div>
+    <h2 v-if="!loaded">로딩중...</h2>
   </div>
 </template>
 
 <script>
+import { convertAPI } from '../../actions'
 export default {
   name: 'Convert',
   data () {
@@ -32,7 +38,7 @@ export default {
       currentType: -1,
       inputVal: '',
       krCoinValues: [],
-      result: 0,
+      result: '',
       loaded: false,
     }
   },
@@ -49,29 +55,17 @@ export default {
         return false
       }
       var result = parseFloat(this.krCoinValues[this.currentType]) * parseFloat(this.inputVal)
-      this.result = result.toFixed(2).toString()
+      this.result = `${result.toFixed(2).toString()} 원`
     }
   },
-  mounted : function () {
-    fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH,BCH&tsyms=BTC,KRW,BTC,USD")
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.krCoinValues.push(responseJson.RAW.BTC.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.ETH.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.ETC.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.XRP.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.LTC.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.DASH.KRW.PRICE)
-        this.krCoinValues.push(responseJson.RAW.BCH.KRW.PRICE)
-        // console.log(this.krCoinValues)
-      })
-      .catch((error) => {
-        this.result = 'API 에러로 데이터를 가져올 수 없습니다'
-        console.error(error);
-      })
-      .then(()=>{
-        this.loaded = true
-      })
+  mounted : async function () {
+    let result = await convertAPI()
+    if(result){
+      this.krCoinValues = result
+    } else { //error
+      this.result = result
+    }
+    this.loaded = true
   },
 }
 </script>
