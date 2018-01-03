@@ -1,6 +1,6 @@
 export const getCoinmarketcap6API = () => {
   return new Promise((resolve, reject) => {
-    fetch("https://api.coinmarketcap.com/v1/ticker/?limit=6")
+    fetch('https://api.coinmarketcap.com/v1/ticker/?limit=6')
       .then((response) => response.json()).then((responseJson) => {
         resolve(responseJson)
       }).catch((error) => {
@@ -12,7 +12,7 @@ export const getCoinmarketcap6API = () => {
 
 export const convertAPI = () => {
   return new Promise((resolve, reject) => {
-    fetch("https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH,BCH&tsyms=BTC,KRW,BTC,USD")
+    fetch('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH,BCH&tsyms=BTC,KRW,BTC,USD')
       .then((response) => response.json())
       .then((responseJson) => {
         let resultArr = []
