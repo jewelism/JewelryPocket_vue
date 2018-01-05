@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>{{ title }}</h1>
+    <h4 v-if="message!=''">{{ message }}</h4>
     <button @click="removeAll">투자리스트 모두삭제</button>
     <div v-if="currentPage=='base'">
+      <button @click="currentPage='invest'">목록보기</button>
       <h2>첫 가상 투자를 위한 초기 설정</h2>
       <h5>여러 종류의 가상 투자를 할 수 있습니다. 구분 짓기 위한 이름이나 설명을 입력해주세요</h5>
       <div :style="styles.uiWrapper">
@@ -26,27 +28,27 @@
     </div>
     <div v-else-if="currentPage=='invest'" :style="styles.uiWrapper">
       <button @click="goToMakePage">새로운 투자 만들기</button>
-      
       <table>
         <thead>
           <th v-for="index in 3">
-            {{tableHead[index-1]}}
+            {{ tableHead[index-1] }}
           </th>
         </thead>
         <tbody>
           <tr v-for="invest in investList" @click="onPressItem(invest)">
-            <td>{{invest.description}}</td>
-            <td>₩ {{invest.won}}</td>
-            <td>{{options[invest.coinType].text}}</td>
-            <td>{{invest.index}}</td>
+            <td>{{ invest.description }}</td>
+            <td>₩ {{ invest.won }}</td>
+            <td>{{ options[invest.coinType].text }}</td>
+            <td>{{ invest.index }}</td> <!-- /// INDEX /// -->
           </tr>
         </tbody>
       </table>
     </div>
     <div v-else-if="currentPage=='detail'">
       <h2 v-if="error">API 오류로 암호화폐정보를 가져올수 없습니다!</h2>
+      <button @click="currentPage='invest'">목록보기</button>
       <button @click="removeItem(detailObj)">Delete this investing</button>
-      <h6>{{detailObj.description}} / {{detailObj.won}}원 / {{coinValue}} {{options[detailObj.coinType].text}}</h6>
+      <h6>{{ detailObj.description }} / {{ detailObj.won }}원 / {{ coinValue }} {{ options[detailObj.coinType].text }}</h6>
     </div>
   </div>
 </template>
@@ -63,6 +65,7 @@ export default {
   data () {
     return {
       title: '가상투자',
+      message: '',
       tableHead: ['투자 설명', '투자한 금액(₩)', '코인 타입'],
       investList: [],
       currentPage: 'invest',
@@ -133,7 +136,10 @@ export default {
         })
     },
     removeItem: async function (obj) {
-      this.investList.splice(obj.index, 1)
+      this.investList = this.investList.filter(function(el){
+        return el.index != obj.index
+      })
+
       localStorage.setItem('invest', JSON.stringify(this.investList))
       if (this.investList.length == 0)
         this.currentPage = 'base'
@@ -146,7 +152,7 @@ export default {
       this.currentPage = 'base'
     },
     onPressItem: async function (invest) {
-      alert('데이터를 불러오는중...')
+      this.message = '데이터를 불러오는중 ...'
       let result = await convertWonToCoin(invest.won, invest.coinType)
       if(result){
         this.coinValue = result
@@ -156,6 +162,7 @@ export default {
       } else { //error
         this.error = true
       }
+      this.message = ''
     }
   }
 }
