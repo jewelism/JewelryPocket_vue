@@ -9,7 +9,7 @@
           {{ option.text }}
         </option>
       </select>
-      <button @click="convert(inputVal)">확인</button>
+      <button @click="convert">확인</button>
       <h5>{{result}}</h5>
     </div>
     <div v-else-if="loaded">
@@ -66,6 +66,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+div {
+  display:table;
+  margin:0 auto;
+}
+
 h1,
 h2 {
   font-weight: normal;
