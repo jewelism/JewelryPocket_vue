@@ -68,3 +68,29 @@ export const convertWonToCoin = (won, coinType) => {
     }
   })
 }
+
+export const convertCoinToWon = (coin, coinType) => {
+  return new Promise((resolve, reject) => {
+    try {
+      fetch('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETH,ETC,XRP,LTC,DASH,BCH&tsyms=KRW')
+        .then((response) => response.json())
+        .then((responseJson) => {
+          let resultArr = []
+          resultArr.push(responseJson.RAW.BTC.KRW.PRICE)
+          resultArr.push(responseJson.RAW.ETH.KRW.PRICE)
+          resultArr.push(responseJson.RAW.ETC.KRW.PRICE)
+          resultArr.push(responseJson.RAW.XRP.KRW.PRICE)
+          resultArr.push(responseJson.RAW.LTC.KRW.PRICE)
+          resultArr.push(responseJson.RAW.DASH.KRW.PRICE)
+          resultArr.push(responseJson.RAW.BCH.KRW.PRICE)
+          resolve(coin * resultArr[coinType])
+        })
+        .catch((error) => {
+          resolve(false)
+          console.error(error)
+        })
+    } catch (error) {
+
+    }
+  })
+}

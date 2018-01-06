@@ -8,11 +8,11 @@
       <h2>첫 가상 투자를 위한 초기 설정</h2>
       <h5>여러 종류의 가상 투자를 할 수 있습니다. 구분 짓기 위한 이름이나 설명을 입력해주세요</h5>
       <div :style="styles.uiWrapper">
-        <input v-model="description" placeholder="간단한 투자 설명" :style="styles.wonInput">
+        <input v-model="description" placeholder="간단한 투자 설명">
       </div>
       <h5>투자하고싶은 금액을 원(₩)단위로 숫자만 입력해주세요.</h5>
       <div :style="styles.uiWrapper">
-        <input v-model="wonInput" placeholder="투자하고싶은 금액(₩) 입력" :style="styles.wonInput">
+        <input v-model="wonInput" placeholder="투자하고싶은 금액(₩) 입력">
       </div>
       <div :style="styles.uiWrapper">
         <select v-model="coinType" :style="styles.select">
@@ -28,45 +28,43 @@
     </div>
     <div v-else-if="currentPage=='invest'" :style="styles.uiWrapper">
       <button @click="goToMakePage">새로운 투자 만들기</button>
-      <table>
+      <table class="investTable">
         <thead>
-          <th v-for="index in 3">
+          <th v-for="index in tableHead.length" class="investTd">
             {{ tableHead[index-1] }}
           </th>
         </thead>
         <tbody>
           <tr v-for="invest in investList" @click="onPressItem(invest)">
-            <td>{{ invest.description }}</td>
-            <td>₩ {{ invest.won }}</td>
-            <td>{{ options[invest.coinType].text }}</td>
-            <td>{{ invest.index }}</td> <!-- /// INDEX /// -->
+            <td class="investTd">{{ invest.description }}</td>
+            <td class="investTd">₩ {{ invest.won }}</td>
+            <td class="investTd">{{ options[invest.coinType].text }}</td>
+            <td class="investTd">{{ invest.coinValue }}</td>
+            <td class="investTd">{{ invest.date }}</td>
+            <!--<td class="investTd">{{ invest.index }}</td>--> <!-- /// INDEX /// -->
           </tr>
         </tbody>
       </table>
     </div>
-    <div v-else-if="currentPage=='detail'">
-      <h2 v-if="error">API 오류로 암호화폐정보를 가져올수 없습니다!</h2>
-      <button @click="currentPage='invest'">목록보기</button>
-      <button @click="removeItem(detailObj)">Delete this investing</button>
-      <h6>{{ detailObj.description }} / {{ detailObj.won }}원 / {{ coinValue }} {{ options[detailObj.coinType].text }}</h6>
-    </div>
+    <InvestDetail v-else-if="currentPage=='detail'" :detailObj="detailObj" :removeItem="removeItem" :setCurrentPage="setCurrentPage"/>
   </div>
 </template>
 
 <script>
 import { getInvestList, addToInvestList, convertWonToCoin } from '../../actions'
 import { COIN_LIST } from '../../constants'
-
-const WIDTH = '200px'
-const HEIGHT = '20px'
+import InvestDetail from './InvestDetail'
 
 export default {
   name: 'Invest',
+  components: {
+    InvestDetail
+  },
   data () {
     return {
       title: '가상투자',
       message: '',
-      tableHead: ['투자 설명', '투자한 금액(₩)', '코인 타입'],
+      tableHead: ['투자 설명', '투자한 금액(₩)', '코인 타입', '보유한 코인', '날짜'],
       investList: [],
       currentPage: 'invest',
       description: '',
@@ -80,21 +78,14 @@ export default {
         uiWrapper: {
           'margin-bottom': '10px',
         },
-        wonInput: {
-          'width': WIDTH,
-          'height': HEIGHT,
-          'border-radius': '5px',
-          'font-size': '15px',
-          'text-align': 'center',
-        },
         select: {
-          'width': WIDTH,
+          'width': '200px',
         },
       }
     }
   },
   computed: {
-    validated() {
+    validated() { //start, save button disabled
       return !(this.description!=0 && this.wonInput != '' && this.coinType != -1)
     }
   },
@@ -113,56 +104,51 @@ export default {
       })
   },
   methods: {
-    goToMakePage: function () {
+    setCurrentPage: function (page) { //need in detail view
+      this.currentPage = page
+    },
+    goToMakePage: function () { //go to start page
       this.currentPage = 'base'
     },
-    addToList: function () {
+    addToList: async function () { //start, save
+      this.message = '요청 처리중 ...'
+      let value = await convertWonToCoin(this.wonInput, this.coinType)
       let investObj = {
         description: this.description,
         won: this.wonInput,
-        coinType: this.coinType
+        coinType: this.coinType,
+        coinValue: value,
+        date: new Date(),
       }
-      addToInvestList(investObj)
-        .then((result) => {
-          if(result){
-            this.investList.push(investObj)
-            this.currentPage = 'invest'
-            this.description =  ''
-            this.wonInput =  ''
-            this.coinType = -1
-          }
-          else
-            alert('요청에 실패하였습니다.')
-        })
+      let result = await addToInvestList(investObj)
+        if (result) {
+          this.investList.push(investObj)
+          this.currentPage = 'invest'
+          this.description =  ''
+          this.wonInput =  ''
+          this.coinType = -1
+        } else
+          alert('요청에 실패하였습니다.')
+      this.message = ''
     },
-    removeItem: async function (obj) {
+    removeItem: async function (obj) { //remove in detail (remove 1 item)
       this.investList = this.investList.filter(function(el){
         return el.index != obj.index
       })
-
       localStorage.setItem('invest', JSON.stringify(this.investList))
       if (this.investList.length == 0)
         this.currentPage = 'base'
       else
         this.currentPage = 'invest'
     },
-    removeAll: function () {
+    removeAll: function () { //remove invest arr
       localStorage.removeItem('invest')
       this.investList = []
       this.currentPage = 'base'
     },
-    onPressItem: async function (invest) {
-      this.message = '데이터를 불러오는중 ...'
-      let result = await convertWonToCoin(invest.won, invest.coinType)
-      if(result){
-        this.coinValue = result
-        this.currentPage = 'detail'
-        this.detailObj = invest
-        // console.log(result)
-      } else { //error
-        this.error = true
-      }
-      this.message = ''
+    onPressItem: function (invest) { //detail
+      this.detailObj = invest
+      this.currentPage = 'detail'
     }
   }
 }
@@ -170,6 +156,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.investTable {
+  border: 1px solid #72D4FF;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-Bottom: 20px;
+}
+.investTd{
+  border: 1px solid #72D4FF;
+  padding: 10px;
+}
+
 div {
   display:table;
   margin:0 auto;

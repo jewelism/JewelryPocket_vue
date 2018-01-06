@@ -1,20 +1,21 @@
 <template>
   <div id="container">
     <h1>{{ title }}</h1>
-    <table v-if="loaded && itemList.length!=0" id="priceInfoTable">
+    <h5>가장 인기있는 암호화폐 6개의 정보</h5>
+    <table v-if="loaded && itemList.length!=0" class="table">
       <thead>
-        <th v-for="index in 6">
+        <th v-for="index in 6" class="tableTd">
           {{tableHead[index-1]}}
         </th>
       </thead>
       <tbody>
         <tr v-for="item in itemList">
-          <td>{{item.symbol}}</td>
-          <td>$ {{parseFloat(item.price_usd).toFixed(1)}}</td>
-          <td>{{parseFloat(item.price_btc).toFixed(8)}}</td>
-          <td>{{item.available_supply}} {{item.symbol}}</td>
-          <td>$ {{parseFloat(item["24h_volume_usd"]).toFixed(0)}}</td>
-          <td>{{parseFloat(item.percent_change_24h).toFixed(2)}} %</td>
+          <td class="tableTd">{{item.symbol}}</td>
+          <td class="tableTd">$ {{parseFloat(item.price_usd).toFixed(1)}}</td>
+          <td class="tableTd">{{parseFloat(item.price_btc).toFixed(8)}}</td>
+          <td class="tableTd">{{item.available_supply}} {{item.symbol}}</td>
+          <td class="tableTd">$ {{parseFloat(item["24h_volume_usd"]).toFixed(0)}}</td>
+          <td class="tableTd">{{parseFloat(item.percent_change_24h).toFixed(2)}} %</td>
         </tr>
       </tbody>
     </table>
@@ -56,6 +57,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.table {
+  border: 1px solid #72D4FF;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.tableTd{
+  border: 1px solid #72D4FF;
+  padding: 10px;
+}
 
 #container {
   display: -webkit-flex;

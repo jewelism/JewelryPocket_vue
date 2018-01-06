@@ -1,15 +1,20 @@
 <template>
-  <div id="app">
+  <div>
+    <div id="app">
+      
+      <Wallet v-if="currentMenu=='wallet'"/>
+      <Invest v-else-if="currentMenu=='invest'"/>
+      <Convert v-else-if="currentMenu=='convert'"/>
+      <More v-else-if="currentMenu=='more'" :onPress="onPressMenuItem"/>
+      <ExchangeLink v-else-if="currentMenu=='exchange'"/>
+      <Intro v-else-if="currentMenu=='intro'"/>
+      <Price v-else="currentMenu=='price'" id="price"/>
+      
+    </div>
+    <div class="footerHolder">
+      <FooterMenu :currentMenu="currentMenu" :onPress="onPressMenuItem" class="footer"/>  
+    </div>
     
-    <Wallet v-if="currentMenu=='wallet'"/>
-    <Invest v-else-if="currentMenu=='invest'"/>
-    <Convert v-else-if="currentMenu=='convert'"/>
-    <More v-else-if="currentMenu=='more'" :onPress="onPressMenuItem"/>
-    <ExchangeLink v-else-if="currentMenu=='exchange'"/>
-    <Intro v-else-if="currentMenu=='intro'"/>
-    <Price v-else="currentMenu=='price'" id="price"/>
-    
-    <FooterMenu :currentMenu="currentMenu" :onPress="onPressMenuItem" id="footer"/>
   </div>
 </template>
 
@@ -60,16 +65,37 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-},
-#price {
+}
+
+.footerHolder {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.footer {
+  height: 120px;
   margin: auto;
-  width: 90%;
-},
-#footer {
-  position:'absolute';
-  bottom:0;
-  width:100%;
-  height:70px;
-  background:#ccc;
+}
+
+input {
+  width: 200px;
+  height: 20px;
+  border-radius: 5px;
+  font-size: 15px;
+  text-align: center;
+}
+
+button {
+  background-color: #008CBA;
+  border: none;
+  color: white;
+  padding: 8px 22.5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 10px;
 }
 </style>

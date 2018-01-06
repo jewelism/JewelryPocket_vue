@@ -2,33 +2,39 @@
   <div>
     <h1>{{ title }}</h1>
     <div v-if="currentPage=='wallet'"> <!--wallet page-->
-      <button @click="navToCreateWalletPage">지갑생성</button>
-      <button @click="removeAllWallet">지갑모두제거</button>
-      <table v-if="walletList.length!=0" id="priceInfoTable">
+      <button @click="navToCreateWalletPage">지갑생성</button><br/>
+      <button @click="removeAllWallet">지갑모두제거</button><br/>
+      <table v-if="walletList.length!=0" class="table">
         <thead>
-          <th v-for="index in 4">
+          <th v-for="index in 4" class="tableTd">
             {{TABLE_HEAD[index-1]}}
           </th>
         </thead>
         <tbody>
           <tr v-for="item in walletList">
-            <td>{{options[item.type].text}}</td>
-            <td>{{item.name}}</td>
-            <td>{{item.addr}}</td>
-            <td>{{item.balance}}</td>
+            <td class="tableTd">{{options[item.type].text}}</td>
+            <td class="tableTd">{{item.name}}</td>
+            <td class="tableTd">{{item.addr}}</td>
+            <td class="tableTd">{{item.balance}}</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div v-if="currentPage=='create'">
-      <input type="text" v-model="walletNameInput" placeholder="지갑이름을 입력하세요"/>
-      <input type="text" v-model="walletAddrInput" placeholder="지갑주소를 입력하세요"/>
-      <select v-model="walletTypeInput">
-        <option disabled value="-1">코인 종류를 선택하세요</option>
-        <option v-for="option in options" :value="option.value">
-          {{ option.text }}
-        </option>
-      </select>
+      <div>
+        <input type="text" v-model="walletNameInput" placeholder="지갑이름을 입력하세요"/>
+      </div>
+      <div>
+        <input type="text" v-model="walletAddrInput" placeholder="지갑주소를 입력하세요"/>
+      </div>
+      <div>
+        <select v-model="walletTypeInput">
+          <option disabled value="-1">코인 종류를 선택하세요</option>
+          <option v-for="option in options" :value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
       <button @click="onClickCreateWallet">생성</button>
     </div>
   </div>
@@ -107,9 +113,20 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.table {
+  border: 1px solid #72D4FF;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.tableTd{
+  border: 1px solid #72D4FF;
+  padding: 10px;
+}
+
 div {
   display:table;
-  margin:0 auto;
+  margin:15px auto;
 }
 
 h1,

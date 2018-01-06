@@ -27,7 +27,7 @@ export const addToInvestList = (investObj) => {
       }
       investObj.index = index //set index
       investList.push(investObj)
-      console.log(investList)
+        // console.log(investList)
       localStorage.setItem('invest', JSON.stringify(investList))
       resolve(true)
     } catch (error) {

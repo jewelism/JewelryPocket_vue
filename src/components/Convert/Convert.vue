@@ -2,15 +2,23 @@
   <div>
     <h1>{{ title }}</h1>
     <div v-if="krCoinValues.length!=0">
-      <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
-      <select v-model="currentType">
-        <option disabled value="-1">코인 종류를 선택하세요</option>
-        <option v-for="option in options" v-bind:value="option.value">
-          {{ option.text }}
-        </option>
-      </select>
-      <button @click="convert">확인</button>
-      <h5>{{result}}</h5>
+      <div class="uiWrapper">
+        <input v-model="inputVal" placeholder="여기에 입력하세요! ex)0.001">
+      </div>
+      <div class="uiWrapper">
+        <select v-model="currentType">
+          <option disabled value="-1">코인 종류를 선택하세요</option>
+          <option v-for="option in options" v-bind:value="option.value">
+            {{ option.text }}
+          </option>
+        </select>
+      </div>
+      <div class="uiWrapper">
+        <button @click="convert">확인</button>
+      </div>
+      <div class="uiWrapper">
+        <h5>{{result}}</h5>
+      </div>
     </div>
     <div v-else-if="loaded">
       <h5>API 오류로 데이터를 가져올 수 없습니다.</h5>
@@ -66,6 +74,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.uiWrapper {
+  margin-bottom: 20px;
+}
+
 div {
   display:table;
   margin:0 auto;
