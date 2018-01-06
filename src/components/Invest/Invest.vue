@@ -2,31 +2,31 @@
   <div>
     <h1>{{ title }}</h1>
     <h4 v-if="message!=''">{{ message }}</h4>
-    <button @click="removeAll">투자리스트 모두삭제</button>
+    <!--<button @click="removeAll">투자리스트 모두삭제</button>-->
     <div v-if="currentPage=='base'">
       <button @click="currentPage='invest'">목록보기</button>
       <h2>첫 가상 투자를 위한 초기 설정</h2>
       <h5>여러 종류의 가상 투자를 할 수 있습니다. 구분 짓기 위한 이름이나 설명을 입력해주세요</h5>
-      <div :style="styles.uiWrapper">
+      <div>
         <input v-model="description" placeholder="간단한 투자 설명">
       </div>
       <h5>투자하고싶은 금액을 원(₩)단위로 숫자만 입력해주세요.</h5>
-      <div :style="styles.uiWrapper">
+      <div>
         <input v-model="wonInput" placeholder="투자하고싶은 금액(₩) 입력">
       </div>
-      <div :style="styles.uiWrapper">
-        <select v-model="coinType" :style="styles.select">
+      <div>
+        <select v-model="coinType">
           <option disabled value="-1">코인 종류를 선택하세요</option>
           <option v-for="option in options" v-bind:value="option.value">
             {{ option.text }}
           </option>
         </select>
       </div>
-      <div :style="styles.uiWrapper">
+      <div>
         <button @click="addToList" :disabled="validated">시작하기!</button>
       </div>
     </div>
-    <div v-else-if="currentPage=='invest'" :style="styles.uiWrapper">
+    <div v-else-if="currentPage=='invest'" >
       <button @click="goToMakePage">새로운 투자 만들기</button>
       <table class="investTable">
         <thead>
@@ -74,14 +74,6 @@ export default {
       coinValue: '',
       detailObj: null,
       error: false,
-      styles: {
-        uiWrapper: {
-          'margin-bottom': '10px',
-        },
-        select: {
-          'width': '200px',
-        },
-      }
     }
   },
   computed: {
@@ -169,7 +161,7 @@ export default {
 
 div {
   display:table;
-  margin:0 auto;
+  margin:15px auto;
 }
 
 h1,

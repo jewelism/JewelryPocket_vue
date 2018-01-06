@@ -87,6 +87,11 @@ input {
   text-align: center;
 }
 
+select {
+  width: 200px;
+  height: 25px;
+}
+
 button {
   background-color: #008CBA;
   border: none;
@@ -97,5 +102,6 @@ button {
   display: inline-block;
   font-size: 13px;
   margin: 10px;
+  border-radius: 3px;
 }
 </style>

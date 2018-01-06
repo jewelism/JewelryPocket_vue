@@ -65,6 +65,11 @@ export default {
     this.walletList = walletList
     
     this.walletList.forEach(async (wallet) => { //get wallet addr balance
+      wallet.balance = await this.getBalance(wallet)
+    })
+  },
+  methods : {
+    getBalance : async function (wallet) {
       let balance = '조회불가'
       if (wallet.type == 0) { //BTC
         balance = await BTCBalance(wallet.addr)
@@ -79,29 +84,26 @@ export default {
       } else if (wallet.type == 5) { //DASH
         balance = await DASHBalance(wallet.addr)
       }
-      wallet.balance = balance
-    })
-  },
-  methods : {
+      return balance
+    },
     navToCreateWalletPage : function () {
       this.title = '지갑 생성',
       this.currentPage = 'create'
     },
-    onClickCreateWallet : function () {
+    onClickCreateWallet : async function () {
       let wallet = {
         name: this.walletNameInput,
         addr: this.walletAddrInput,
         type: this.walletTypeInput,
         balance: '불러오는중...'
       }
-      
+      wallet.balance = await this.getBalance(wallet)
       let walletList = this.walletList
       walletList.push(wallet)
       this.walletList = walletList
       localStorage.setItem('wallet', JSON.stringify(walletList))
       this.title = '내 지갑'
       this.currentPage = 'wallet'
-      alert('지갑생성완료')
     },
     removeAllWallet : function () {
       localStorage.removeItem('wallet')
