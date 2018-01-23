@@ -28,6 +28,7 @@
     </div>
     <div v-else-if="currentPage=='invest'" >
       <button @click="goToMakePage">새로운 투자 만들기</button>
+      <h3>투자 관리를 하려면 행을 클릭하세요!</h3>
       <table class="investTable">
         <thead>
           <th v-for="index in tableHead.length" class="investTd">

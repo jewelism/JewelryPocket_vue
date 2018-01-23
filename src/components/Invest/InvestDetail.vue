@@ -4,11 +4,19 @@
     <h2 v-if="error">API 오류로 암호화폐정보를 가져올수 없습니다!</h2>
     <button @click="setCurrentPage('invest')">목록보기</button>
     <button @click="removeItem(detailObj)">투자 삭제</button>
-    <h6>{{ detailObj.description }} / {{ detailObj.won }}원 / {{ coinValue }} {{ options[detailObj.coinType].text }} / {{ detailObj.date }}</h6>
-    수익결과
-    <h6>{{revenueWon}}원</h6>
-    수익률
-    <h6>{{percentage}}%</h6>
+    <button @click="purchase(detailObj)">코인 구매</button>
+    <button @click="sell(detailObj)">코인 판매</button>
+    <div>&nbsp;</div>
+    <div>
+      <span>{{ detailObj.description }}</span>
+      <span>총매수 : {{ detailObj.won }}원</span>
+      <span>보유수량 : {{ coinValue }} {{ options[detailObj.coinType].text }}</span>
+      <span>최초날짜 : {{ detailObj.date }}</span>
+    </div>
+    <h2>평가손익</h2>
+    <h4>{{revenueWon}}원</h4>
+    <h2>수익률</h2>
+    <h4>{{percentage}}%</h4>
   </div>
 </template>
 
@@ -30,7 +38,12 @@ export default {
     }
   },
   methods: {
-    
+    purchase: function () {
+
+    },
+    sell: function () {
+
+    }
   },
   mounted : async function () {
     this.message = '데이터를 불러오는중 ...'
@@ -54,6 +67,12 @@ export default {
 div {
   display:table;
   margin:0 auto;
+}
+
+span {
+  margin: 5px;
+  border: 1px solid #008CBA;
+  padding: 7px 20px;
 }
 
 h1,

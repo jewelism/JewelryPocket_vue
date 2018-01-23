@@ -45,6 +45,7 @@ export default {
   },
   mounted : async function () {
     let result = await getCoinmarketcap6API()
+    console.log(result)
     if(result){
       this.itemList = result
     } else { //error
