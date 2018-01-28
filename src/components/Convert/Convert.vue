@@ -14,7 +14,7 @@
         </select>
       </div>
       <div class="uiWrapper">
-        <button @click="convert">확인</button>
+        <button @click="convert" :disabled="!validated" :style="!validated && { backgroundColor:'rgba(39, 39, 39, 0.3)' }">확인</button>
       </div>
       <div class="uiWrapper">
         <h5>{{result}}</h5>
@@ -58,6 +58,11 @@ export default {
       }
       var result = parseFloat(this.krCoinValues[this.currentType]) * parseFloat(this.inputVal)
       this.result = `${result.toFixed(2).toString()} 원`
+    }
+  },
+  computed: {
+    validated() { //start, save button disabled
+      return (this.inputVal != '' && this.currentType != -1)
     }
   },
   mounted : async function () {

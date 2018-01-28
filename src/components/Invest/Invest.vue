@@ -23,7 +23,13 @@
         </select>
       </div>
       <div>
-        <button @click="addToList" :disabled="validated">시작하기!</button>
+        <button 
+          @click="addToList"
+          :disabled="validated"
+          :style="validated && { backgroundColor:'rgba(39, 39, 39, 0.3)' }"
+        >
+          시작하기!
+        </button>
       </div>
     </div>
     <div v-else-if="currentPage=='invest'" >
@@ -31,12 +37,18 @@
       <h3>투자 관리를 하려면 행을 클릭하세요!</h3>
       <table class="investTable">
         <thead>
-          <th v-for="index in tableHead.length" class="investTd">
+          <th v-for="index in tableHead.length" class="investTd" :style="{ backgroundColor: 'rgba(114, 212, 255, 0.1)' }">
             {{ tableHead[index-1] }}
           </th>
         </thead>
         <tbody>
-          <tr v-for="invest in investList" @click="onPressItem(invest)">
+          <tr
+            v-for="(invest, index) in investList"
+            @click="onPressItem(invest)"
+            @mouseover="hoverIndex=index"
+            @mouseleave="hoverIndex=-1"
+            :style="isHover(index) ? hoverStyle : style"
+          >
             <td class="investTd">{{ invest.description }}</td>
             <td class="investTd">₩ {{ invest.won }}</td>
             <td class="investTd">{{ options[invest.coinType].text }}</td>
@@ -75,6 +87,15 @@ export default {
       coinValue: '',
       detailObj: null,
       error: false,
+      hoverIndex: -1,
+      style: {
+        backgroundColor: 'transparent',
+        cursor: 'auto',
+      },
+      hoverStyle: {
+        backgroundColor: 'rgba(114, 212, 255, 0.3)',
+        cursor: 'pointer',
+      }
     }
   },
   computed: {
@@ -142,7 +163,11 @@ export default {
     onPressItem: function (invest) { //detail
       this.detailObj = invest
       this.currentPage = 'detail'
-    }
+    },
+    isHover: function(index){
+      // console.log(index)
+      return this.hoverIndex==index
+    },
   }
 }
 </script>

@@ -4,7 +4,7 @@
     <h5>가장 인기있는 암호화폐 6개의 정보</h5>
     <table v-if="loaded && itemList.length!=0" class="table">
       <thead>
-        <th v-for="index in 6" class="tableTd">
+        <th v-for="index in 6" class="tableTd" :style="{ backgroundColor: 'rgba(114, 212, 255, 0.1)' }">
           {{tableHead[index-1]}}
         </th>
       </thead>

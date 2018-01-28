@@ -6,7 +6,7 @@
       <button @click="removeAllWallet">지갑모두제거</button><br/>
       <table v-if="walletList.length!=0" class="table">
         <thead>
-          <th v-for="index in 4" class="tableTd">
+          <th v-for="index in 4" class="tableTd" :style="{ backgroundColor: 'rgba(114, 212, 255, 0.1)' }">
             {{TABLE_HEAD[index-1]}}
           </th>
         </thead>
